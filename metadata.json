@@ -1,0 +1,7 @@
+{
+  "name": "Visit Shaftesbury 2026",
+  "description": "A premium tourism website for Shaftesbury, Dorset, featuring event syncing, interactive maps, and historical guides.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
