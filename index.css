@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+/* Theme configuration */
+@theme {
+  --color-heritage-green: #013220;
+  --color-heritage-gold: #C5A059;
+  --color-heritage-cream: #F9F7F2;
+  --color-heritage-charcoal: #333333;
+
+  --font-family-serif: 'Playfair Display', serif;
+  --font-family-sans: 'Inter', sans-serif;
+}
+
+/* Custom Styles */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F9F7F2;
+}
+
+h1, h2, h3, h4, .font-serif {
+  font-family: 'Playfair Display', serif;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Accessibility: Focus Styles */
+:focus-visible {
+  outline: 2px solid #C5A059;
+  outline-offset: 4px;
+}
+
+/* Skip to content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #C5A059;
+  color: #013220;
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.2s;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+@keyframes ken-burns {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+/* Custom Leaflet Marker Styling */
+.custom-marker {
+  background-color: #C5A059;
+  border: 2px solid #013220;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.user-marker {
+  background-color: #4285F4;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(66, 133, 244, 0.5);
+}
