@@ -6,6 +6,7 @@ import { supabase } from '../supabaseClient';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -21,6 +22,18 @@ const Navbar: React.FC = () => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isProfileOpen && !target.closest('[aria-label="User account menu"]') && !target.closest('.absolute')) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isProfileOpen]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -72,29 +85,37 @@ const Navbar: React.FC = () => {
               </button>
               
               {user ? (
-                <div className="relative group">
-                  <button 
+                <div className="relative">
+                  <button
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
                     aria-label="User account menu"
                     aria-haspopup="true"
+                    aria-expanded={isProfileOpen}
                     className="flex items-center space-x-2 p-2 bg-heritage-gold text-heritage-green rounded-full hover:bg-white transition-all"
                   >
                     <User className="w-5 h-5" aria-hidden="true" />
                   </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-white text-heritage-green shadow-2xl rounded-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-gray-100">
-                    <div className="p-4 border-b border-gray-50">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Signed in as</p>
-                      <p className="text-xs font-bold truncate">{user.email}</p>
+                  {isProfileOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white text-heritage-green shadow-2xl rounded-sm border border-gray-100 z-50">
+                      <div className="p-4 border-b border-gray-50">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Signed in as</p>
+                        <p className="text-xs font-bold truncate">{user.email}</p>
+                      </div>
+                      <Link
+                        to="/admin"
+                        onClick={() => setIsProfileOpen(false)}
+                        className="flex items-center space-x-2 px-4 py-3 hover:bg-heritage-cream text-xs font-bold uppercase tracking-widest transition-colors"
+                      >
+                        <LayoutDashboard className="w-4 h-4" aria-hidden="true" /> <span>Dashboard</span>
+                      </Link>
+                      <button
+                        onClick={() => { setIsProfileOpen(false); handleLogout(); }}
+                        className="w-full flex items-center space-x-2 px-4 py-3 hover:bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest transition-colors border-t border-gray-50"
+                      >
+                        <LogOut className="w-4 h-4" aria-hidden="true" /> <span>Sign Out</span>
+                      </button>
                     </div>
-                    <Link to="/admin" className="flex items-center space-x-2 px-4 py-3 hover:bg-heritage-cream text-xs font-bold uppercase tracking-widest transition-colors">
-                      <LayoutDashboard className="w-4 h-4" aria-hidden="true" /> <span>Dashboard</span>
-                    </Link>
-                    <button 
-                      onClick={handleLogout}
-                      className="w-full flex items-center space-x-2 px-4 py-3 hover:bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest transition-colors border-t border-gray-50"
-                    >
-                      <LogOut className="w-4 h-4" aria-hidden="true" /> <span>Sign Out</span>
-                    </button>
-                  </div>
+                  )}
                 </div>
               ) : (
                 <Link to="/login" className="flex items-center space-x-2 px-6 py-2 border border-heritage-gold text-heritage-gold hover:bg-heritage-gold hover:text-heritage-green transition-all text-xs font-bold uppercase tracking-widest">
