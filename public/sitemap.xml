@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/</loc>
+    <lastmod>2026-01-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://i.postimg.cc/SKvjQ0th/gold_hill_shaftesbury_2.jpg</image:loc>
+      <image:title>Gold Hill Shaftesbury - The Iconic Cobbled Street</image:title>
+      <image:caption>England's most iconic cobbled street, famous for the Ridley Scott Hovis advert</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Events Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/events</loc>
+    <lastmod>2026-01-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Eat & Drink Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/eat-drink</loc>
+    <lastmod>2026-01-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Stay Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/stay</loc>
+    <lastmod>2026-01-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Plan Your Visit Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/plan</loc>
+    <lastmod>2026-01-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- History Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/history</loc>
+    <lastmod>2026-01-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Submit Event Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/submit-event</loc>
+    <lastmod>2026-01-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Sitemap Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/sitemap</loc>
+    <lastmod>2026-01-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Login Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/login</loc>
+    <lastmod>2026-01-21</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Gold Hill Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/gold-hill</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Shaftesbury Abbey Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/shaftesbury-abbey</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Castle Hill Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/castle-hill</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Park Walk Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/park-walk</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Gold Hill Museum Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/gold-hill-museum</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Shaftesbury Arts Centre Page -->
+  <url>
+    <loc>https://visitshaftesbury.co.uk/shaftesbury-arts-centre</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>

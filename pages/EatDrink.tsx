@@ -1,15 +1,41 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ExternalLink, UtensilsCrossed, Star, Wine } from 'lucide-react';
-import { DINING_PLACES } from '../constants';
+import { supabase } from '../supabaseClient';
+import { Place } from '../types';
 import SEO from '../components/SEO';
 
 const EatDrink: React.FC = () => {
+  const [diningPlaces, setDiningPlaces] = useState<Place[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDiningPlaces = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('places_dining')
+          .select('*')
+          .order('name', { ascending: true });
+
+        if (error) throw error;
+        setDiningPlaces(data || []);
+      } catch (err) {
+        setError('Failed to load dining places');
+        console.error('Error fetching dining places:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDiningPlaces();
+  }, []);
+
   const restaurantSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": "Restaurants in Shaftesbury",
-    "itemListElement": DINING_PLACES.map((place, index) => ({
+    "itemListElement": diningPlaces.map((place, index) => ({
       "@type": "ListItem",
       "position": index + 1,
       "item": {
@@ -30,10 +56,13 @@ const EatDrink: React.FC = () => {
 
   return (
     <div className="bg-heritage-cream min-h-screen pb-24">
-      <SEO 
-        title="Eat & Drink"
-        description="A guide to the best restaurants, pubs, and cafes in Shaftesbury, Dorset. From fine dining at La Fleur de Lys to traditional pubs like The Mitre."
+      <SEO
+        title="Eat & Drink in Shaftesbury"
+        description="Discover the best restaurants, pubs, and cafes in Shaftesbury, Dorset. From award-winning fine dining at La Fleur de Lys to traditional country pubs like The Mitre with stunning Blackmore Vale views."
         schema={restaurantSchema}
+        image="https://images.squarespace-cdn.com/content/v1/597853a8d2b8576d2caa6efa/1741348195018-OE834M9XWD8OIIZ5IVIO/Hungergap-49.jpg?format=2500w"
+        keywords="Shaftesbury restaurants, Dorset dining, The Mitre Shaftesbury, La Fleur de Lys, Grosvenor Arms, Shaftesbury pubs, fine dining Dorset, country pubs, Dorset food, farm to table"
+        canonical="https://visitshaftesbury.co.uk/eat-drink"
       />
       
       {/* Hero Section */}
@@ -93,12 +122,22 @@ const EatDrink: React.FC = () => {
           </div>
           <div className="mt-4 md:mt-0 flex items-center space-x-2 text-gray-400 text-sm">
             <UtensilsCrossed className="w-4 h-4" aria-hidden="true" />
-            <span>Showing {DINING_PLACES.length} venues</span>
+            <span>Showing {diningPlaces.length} venues</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {DINING_PLACES.map((place) => (
+        {loading ? (
+          <div className="text-center py-20">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-heritage-gold"></div>
+            <p className="mt-4 text-gray-500 text-sm uppercase tracking-widest">Loading venues...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-20 bg-red-50 rounded-sm p-8">
+            <p className="text-red-600 font-medium">{error}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {diningPlaces.map((place) => (
             <div key={place.id} className="group bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 flex flex-col">
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img 
@@ -129,8 +168,9 @@ const EatDrink: React.FC = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Seasonal Note */}

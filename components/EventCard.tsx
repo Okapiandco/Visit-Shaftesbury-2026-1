@@ -12,10 +12,11 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
   return (
     <Link to={`/events/${event.id}`} className="group block bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 h-full flex flex-col">
       <div className="relative overflow-hidden aspect-[4/3]">
-        <img 
-          src={event.image_url} 
-          alt={event.title} 
+        <img
+          src={event.image_url}
+          alt={`${event.title} - Event in Shaftesbury on ${new Date(event.date).toLocaleDateString('en-GB')} at ${event.location}`}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          loading="lazy"
         />
         <div className="absolute top-4 left-4 bg-heritage-green text-white px-3 py-1 text-xs font-bold uppercase tracking-widest shadow-lg">
           {new Date(event.date).toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}

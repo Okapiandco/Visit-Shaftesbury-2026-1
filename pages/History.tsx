@@ -6,9 +6,12 @@ import { History, Shield, Heart, Camera } from 'lucide-react';
 const HistoryPage: React.FC = () => {
   return (
     <div className="bg-heritage-cream min-h-screen">
-      <SEO 
-        title="Our Saxon History" 
-        description="Explore the 1000-year history of Shaftesbury, from King Alfred the Great to the iconic Hovis Hill."
+      <SEO
+        title="Saxon History of Shaftesbury"
+        description="Discover the rich 1000-year history of Shaftesbury, Dorset. Founded by King Alfred the Great in 888 AD, explore the Saxon Abbey, medieval heritage, and the iconic Gold Hill Hovis advert."
+        image="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=1600"
+        keywords="Shaftesbury history, King Alfred Great, Saxon town, Shaftesbury Abbey, medieval England, Anglo-Saxon, Hovis advert history, Gold Hill history, Dorset heritage"
+        canonical="https://visitshaftesbury.co.uk/history"
       />
       
       {/* Immersive Header */}

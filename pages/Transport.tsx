@@ -31,10 +31,13 @@ const Transport: React.FC = () => {
 
   return (
     <div className="bg-white min-h-screen">
-      <SEO 
-        title="Plan Your Visit"
-        description="Getting to Shaftesbury. Information on Gillingham station, local bus routes (X2, 25), and parking in Bell Street or Angel Lane."
+      <SEO
+        title="Plan Your Visit to Shaftesbury"
+        description="Complete guide to visiting Shaftesbury, Dorset. Travel information including train from Gillingham station, bus routes (X2, 25), parking at Bell Street and Angel Lane, plus local attractions map."
         schema={transportSchema}
+        image="https://i.postimg.cc/SKvjQ0th/gold_hill_shaftesbury_2.jpg"
+        keywords="visit Shaftesbury, getting to Shaftesbury, Gillingham station, Shaftesbury parking, Dorset travel, Shaftesbury map, plan your visit, Shaftesbury directions, public transport Shaftesbury"
+        canonical="https://visitshaftesbury.co.uk/plan"
       />
 
       {/* Hero */}

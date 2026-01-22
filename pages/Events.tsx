@@ -158,9 +158,13 @@ const Events: React.FC = () => {
 
   return (
     <div className="bg-heritage-cream min-h-screen pb-24">
-      <SEO 
-        title="Events & Festivals"
-        description="Explore upcoming events and festivals in Shaftesbury, Dorset."
+      <SEO
+        title="Events & Festivals in Shaftesbury"
+        description="Discover exciting events and festivals in Shaftesbury, Dorset. From historic festivals and open-air theatre to artisanal markets, live music, and community gatherings."
+        image="https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&q=80&w=1200"
+        keywords="Shaftesbury events, Dorset festivals, Shaftesbury markets, live music Shaftesbury, community events, Shaftesbury theatre, what's on Shaftesbury"
+        canonical="https://visitshaftesbury.co.uk/events"
+        type="website"
       />
       
       {/* Header */}

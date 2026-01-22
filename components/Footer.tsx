@@ -30,10 +30,12 @@ const Footer: React.FC = () => {
         <nav aria-label="Footer quick links">
           <h4 className="font-bold uppercase tracking-widest mb-4 text-heritage-gold text-sm">Explore</h4>
           <ul className="space-y-2 text-sm text-gray-400">
-            <li><a href="#" className="hover:text-white transition-colors">Gold Hill</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Shaftesbury Abbey</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Castle Hill</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Park Walk</a></li>
+            <li><a href="/gold-hill" className="hover:text-white transition-colors">Gold Hill</a></li>
+            <li><a href="/shaftesbury-abbey" className="hover:text-white transition-colors">Shaftesbury Abbey</a></li>
+            <li><a href="/castle-hill" className="hover:text-white transition-colors">Castle Hill</a></li>
+            <li><a href="/park-walk" className="hover:text-white transition-colors">Park Walk</a></li>
+            <li><a href="/gold-hill-museum" className="hover:text-white transition-colors">Gold Hill Museum</a></li>
+            <li><a href="/shaftesbury-arts-centre" className="hover:text-white transition-colors">Arts Centre</a></li>
           </ul>
         </nav>
 
@@ -41,7 +43,7 @@ const Footer: React.FC = () => {
           <h4 className="font-bold uppercase tracking-widest mb-4 text-heritage-gold text-sm">Useful Info</h4>
           <ul className="space-y-2 text-sm text-gray-400">
             <li><a href="/plan" className="hover:text-white transition-colors">Getting Here</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Public Toilets</a></li>
+            <li><a href="/sitemap" className="hover:text-white transition-colors">Site Map</a></li>
             <li><a href="#" className="hover:text-white transition-colors">Parking</a></li>
             <li><a href="#" className="hover:text-white transition-colors">Tourist Office</a></li>
           </ul>

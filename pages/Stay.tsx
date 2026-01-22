@@ -1,15 +1,41 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ExternalLink, Bed, Home, MapPin } from 'lucide-react';
-import { STAY_PLACES } from '../constants';
+import { supabase } from '../supabaseClient';
+import { Place } from '../types';
 import SEO from '../components/SEO';
 
 const Stay: React.FC = () => {
+  const [stayPlaces, setStayPlaces] = useState<Place[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchStayPlaces = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('places_stay')
+          .select('*')
+          .order('name', { ascending: true });
+
+        if (error) throw error;
+        setStayPlaces(data || []);
+      } catch (err) {
+        setError('Failed to load accommodations');
+        console.error('Error fetching stay places:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStayPlaces();
+  }, []);
+
   const accommodationSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": "Places to Stay in Shaftesbury",
-    "itemListElement": STAY_PLACES.map((place, index) => ({
+    "itemListElement": stayPlaces.map((place, index) => ({
       "@type": "ListItem",
       "position": index + 1,
       "item": {
@@ -30,10 +56,13 @@ const Stay: React.FC = () => {
 
   return (
     <div className="bg-heritage-cream min-h-screen pb-24">
-      <SEO 
-        title="Places to Stay"
-        description="Find the perfect hotel, B&B, or holiday cottage in Shaftesbury, Dorset. From the elegant Grosvenor Arms to boutique B&Bs."
+      <SEO
+        title="Places to Stay in Shaftesbury"
+        description="Find the perfect accommodation in Shaftesbury, Dorset. Choose from luxury hotels, charming B&Bs, historic inns, glamping pods, and country houses. Book your Shaftesbury stay today."
         schema={accommodationSchema}
+        image="https://i.postimg.cc/yx5T0rNJ/20240505_141626.jpg"
+        keywords="Shaftesbury hotels, Dorset accommodation, Shaftesbury B&B, Royal Chase Hotel, Grosvenor Arms, glamping Shaftesbury, boutique hotels Dorset, Shaftesbury lodging"
+        canonical="https://visitshaftesbury.co.uk/stay"
       />
       
       {/* Hero Section */}
@@ -93,12 +122,22 @@ const Stay: React.FC = () => {
           </div>
           <div className="mt-4 md:mt-0 flex items-center space-x-2 text-gray-400 text-sm">
             <MapPin className="w-4 h-4" aria-hidden="true" />
-            <span>{STAY_PLACES.length} Unique Locations</span>
+            <span>{stayPlaces.length} Unique Locations</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {STAY_PLACES.map((place) => (
+        {loading ? (
+          <div className="text-center py-20">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-heritage-gold"></div>
+            <p className="mt-4 text-gray-500 text-sm uppercase tracking-widest">Loading accommodations...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-20 bg-red-50 rounded-sm p-8">
+            <p className="text-red-600 font-medium">{error}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {stayPlaces.map((place) => (
             <div key={place.id} className="group bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 flex flex-col">
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img 
@@ -130,8 +169,9 @@ const Stay: React.FC = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Guide Note */}
