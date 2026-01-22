@@ -1,40 +1,37 @@
 import React, { useEffect, useRef, useState } from 'react';
+import L from 'leaflet';
 import { LANDMARKS } from '../constants';
 
 const InteractiveMap: React.FC = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if Leaflet is available
-    if (!(window as any).L) {
-      setError("Map library failed to load. Please check your connection.");
+    if (!mapContainerRef.current || mapInstanceRef.current) {
       return;
     }
 
-    const L = (window as any).L;
+    try {
+      const center: L.LatLngExpression = [51.0044, -2.1979];
 
-    if (!mapInstanceRef.current && mapContainerRef.current) {
-      try {
-        const center: [number, number] = [51.0044, -2.1979];
-        
-        // Initialize Map
-        const map = L.map(mapContainerRef.current, {
-          center: center,
-          zoom: 16,
-          scrollWheelZoom: false,
-        });
+      // Initialize Map
+      const map = L.map(mapContainerRef.current, {
+        center: center,
+        zoom: 16,
+        scrollWheelZoom: false,
+      });
 
-        // Use a clean, heritage-appropriate tile set (CartoDB Positron)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          subdomains: 'abcd',
-          maxZoom: 20
-        }).addTo(map);
+      // Use a clean, heritage-appropriate tile set (CartoDB Positron)
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
+      }).addTo(map);
 
-        // Add Landmark Markers
-        LANDMARKS.forEach((landmark) => {
+      // Add Landmark Markers
+      LANDMARKS.forEach((landmark) => {
+        if (landmark.lat && landmark.lng) {
           const customIcon = L.divIcon({
             className: 'custom-marker',
             iconSize: [16, 16],
@@ -42,24 +39,30 @@ const InteractiveMap: React.FC = () => {
           });
 
           const marker = L.marker([landmark.lat, landmark.lng], { icon: customIcon }).addTo(map);
-          
+
           const popupContent = `
             <div style="padding: 5px; font-family: 'Inter', sans-serif;">
               <h3 style="font-family: 'Playfair Display', serif; font-weight: bold; color: #013220; margin-bottom: 4px; font-size: 16px;">${landmark.name}</h3>
               <p style="font-size: 12px; color: #666; line-height: 1.4; margin: 0;">${landmark.description}</p>
             </div>
           `;
-          
+
           marker.bindPopup(popupContent, {
             className: 'heritage-popup'
           });
-        });
+        }
+      });
 
-        mapInstanceRef.current = map;
-      } catch (e) {
-        console.error("Map initialization failed", e);
-        setError("Failed to initialize the interactive map.");
-      }
+      mapInstanceRef.current = map;
+
+      // Invalidate size after a short delay to ensure proper rendering
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+
+    } catch (e) {
+      console.error("Map initialization failed", e);
+      setError("Failed to initialize the interactive map.");
     }
 
     return () => {

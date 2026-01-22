@@ -1,11 +1,71 @@
 
-import React from 'react';
-import { ArrowRight, MapPin, History, Utensils, Bed, Compass, Mountain, Trees, Landmark as LandmarkIcon, Info } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, MapPin, History, Utensils, Bed, Compass, Mountain, Trees, Landmark as LandmarkIcon, Info, Calendar, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
-import { LANDMARKS } from '../constants';
+import { supabase } from '../supabaseClient';
+import { Landmark, ShaftesburyEvent } from '../types';
 
 const Home: React.FC = () => {
+  const [landmarks, setLandmarks] = useState<Landmark[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<ShaftesburyEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [eventsLoading, setEventsLoading] = useState(true);
+
+  // Map landmark IDs to their page URLs
+  const getLandmarkUrl = (id: string): string => {
+    const urlMap: Record<string, string> = {
+      'gold-hill': '/gold-hill',
+      'abbey': '/shaftesbury-abbey',
+      'gold-hill-museum': '/gold-hill-museum',
+      'park-walk': '/park-walk',
+      'arts-centre': '/shaftesbury-arts-centre',
+      'castle-hill': '/castle-hill'
+    };
+    return urlMap[id] || '/plan';
+  };
+
+  useEffect(() => {
+    const fetchLandmarks = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('landmarks')
+          .select('*')
+          .order('name', { ascending: true });
+
+        if (error) throw error;
+        setLandmarks(data || []);
+      } catch (err) {
+        console.error('Error fetching landmarks:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchUpcomingEvents = async () => {
+      try {
+        const today = new Date().toISOString().split('T')[0];
+        const { data, error } = await supabase
+          .from('events')
+          .select('*')
+          .eq('status', 'published')
+          .gte('date', today)
+          .order('date', { ascending: true })
+          .limit(6);
+
+        if (error) throw error;
+        setUpcomingEvents(data || []);
+      } catch (err) {
+        console.error('Error fetching upcoming events:', err);
+      } finally {
+        setEventsLoading(false);
+      }
+    };
+
+    fetchLandmarks();
+    fetchUpcomingEvents();
+  }, []);
+
   const homeSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -22,15 +82,18 @@ const Home: React.FC = () => {
   const goldHillImageUrl = "https://i.postimg.cc/SKvjQ0th/gold_hill_shaftesbury_2.jpg";
 
   // Filter landmarks for the "Must-Sees" (In Town) and "Beyond the Town" explore section
-  const mustSees = LANDMARKS.filter(l => l.distance === 'In Town');
-  const exploreAttractions = LANDMARKS.filter(l => l.distance !== 'In Town');
+  const mustSees = landmarks.filter(l => l.distance === 'In Town');
+  const exploreAttractions = landmarks.filter(l => l.distance !== 'In Town');
 
   return (
     <div className="flex flex-col">
-      <SEO 
-        title="Welcome"
-        description="Discover Shaftesbury, Dorset's iconic hilltop Saxon town. Home to the world-famous Gold Hill, historic Abbey ruins, and breathtaking views over the Blackmore Vale."
+      <SEO
+        title="Welcome to Shaftesbury"
+        description="Discover Shaftesbury, Dorset's iconic hilltop Saxon town. Home to the world-famous Gold Hill, historic Abbey ruins, and breathtaking views over the Blackmore Vale. Plan your visit today."
         schema={homeSchema}
+        image={goldHillImageUrl}
+        keywords="Shaftesbury Dorset, Gold Hill, Hovis Advert, Saxon Town, Shaftesbury Abbey, Blackmore Vale, Visit Shaftesbury, Dorset Tourism, Historic Towns UK, Shaftesbury Events"
+        canonical="https://visitshaftesbury.co.uk/"
       />
       
       {/* Hero Section */}
@@ -101,6 +164,66 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Upcoming Events Carousel */}
+      {!eventsLoading && upcomingEvents.length > 0 && (
+        <section className="py-20 bg-white px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <span className="text-heritage-gold uppercase tracking-[0.3em] text-xs font-bold block mb-2">What's On</span>
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-heritage-green mb-4">Upcoming Events</h2>
+              <p className="text-gray-500 max-w-2xl mx-auto">Discover the latest happenings in Shaftesbury</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {upcomingEvents.map((event) => (
+                <Link
+                  key={event.id}
+                  to="/events"
+                  className="group bg-heritage-cream hover:bg-white border border-heritage-gold/20 hover:border-heritage-gold rounded-sm overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+                >
+                  <div className="relative aspect-[16/9] overflow-hidden">
+                    <img
+                      src={event.image_url}
+                      alt={`Event: ${event.title} in Shaftesbury`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute top-4 left-4 bg-heritage-green text-white px-3 py-1 text-xs font-bold uppercase tracking-widest">
+                      Event
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-serif font-bold text-heritage-green mb-3 group-hover:text-heritage-gold transition-colors line-clamp-2">
+                      {event.title}
+                    </h3>
+                    <div className="flex items-center text-sm text-gray-600 mb-2">
+                      <Calendar className="w-4 h-4 mr-2 text-heritage-gold" aria-hidden="true" />
+                      <time dateTime={event.date}>{new Date(event.date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</time>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-600 mb-4">
+                      <Clock className="w-4 h-4 mr-2 text-heritage-gold" aria-hidden="true" />
+                      <span>{event.time}</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-600">
+                      <MapPin className="w-4 h-4 mr-2 text-heritage-gold" aria-hidden="true" />
+                      <span className="line-clamp-1">{event.location}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="text-center mt-12">
+              <Link
+                to="/events"
+                className="inline-flex items-center bg-heritage-green text-white px-8 py-4 font-bold uppercase tracking-widest text-xs hover:bg-heritage-gold transition-all shadow-lg"
+              >
+                View All Events <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Featured Landmarks Grid (Must-Sees) */}
       <section className="py-20 bg-heritage-cream px-4">
         <div className="max-w-7xl mx-auto">
@@ -115,8 +238,14 @@ const Home: React.FC = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {mustSees.map((landmark) => (
+          {loading ? (
+            <div className="text-center py-20">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-heritage-gold"></div>
+              <p className="mt-4 text-gray-500 text-sm uppercase tracking-widest">Loading landmarks...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {mustSees.map((landmark) => (
               <div key={landmark.id} className="relative aspect-[3/4] overflow-hidden group shadow-lg">
                 {landmark.image_url ? (
                   <img src={landmark.image_url} alt={landmark.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -139,13 +268,14 @@ const Home: React.FC = () => {
                       </div>
                     </div>
                   )}
-                  <Link to="/plan" className="text-xs font-bold uppercase tracking-widest text-heritage-gold flex items-center mt-auto">
-                    Find on Map <ArrowRight className="w-3 h-3 ml-1" />
+                  <Link to={getLandmarkUrl(landmark.id)} className="text-xs font-bold uppercase tracking-widest text-heritage-gold flex items-center mt-auto">
+                    Discover More <ArrowRight className="w-3 h-3 ml-1" />
                   </Link>
                 </div>
               </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -158,8 +288,14 @@ const Home: React.FC = () => {
             <div className="w-24 h-1 bg-heritage-gold mx-auto mt-8"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {exploreAttractions.map((attraction) => (
+          {loading ? (
+            <div className="text-center py-20">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-heritage-gold"></div>
+              <p className="mt-4 text-gray-500 text-sm uppercase tracking-widest">Loading attractions...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {exploreAttractions.map((attraction) => (
               <div key={attraction.id} className="group bg-heritage-cream/40 p-10 border border-heritage-gold/10 hover:border-heritage-gold transition-all duration-500 hover:shadow-2xl">
                 <div className="mb-6 flex justify-between items-start">
                   <div className="bg-heritage-green p-3 text-heritage-gold group-hover:bg-heritage-gold group-hover:text-heritage-green transition-colors">
@@ -184,8 +320,9 @@ const Home: React.FC = () => {
                   Find on Map <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
