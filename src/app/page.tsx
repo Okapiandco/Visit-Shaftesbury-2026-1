@@ -5,6 +5,9 @@ import { MapPin, Calendar, Utensils, Bed, ArrowRight } from 'lucide-react';
 import { LANDMARKS } from '@/constants';
 import { supabase } from '@/lib/supabase';
 
+// Revalidate every 5 minutes to show fresh events
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: 'Visit Shaftesbury - Discover Historic Dorset | Gold Hill & More',
   description:
