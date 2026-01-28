@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Calendar, Utensils, Bed, ArrowRight } from 'lucide-react';
-import { LANDMARKS, MOCK_EVENTS } from '@/constants';
+import { LANDMARKS } from '@/constants';
+import { supabase } from '@/lib/supabase';
 
 export const metadata: Metadata = {
   title: 'Visit Shaftesbury - Discover Historic Dorset | Gold Hill & More',
@@ -19,9 +20,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
   const featuredLandmarks = LANDMARKS.slice(0, 4);
-  const upcomingEvents = MOCK_EVENTS.slice(0, 3);
+
+  // Fetch real events from Supabase
+  const { data: events } = await supabase
+    .from('events')
+    .select('*')
+    .eq('status', 'published')
+    .order('date', { ascending: true })
+    .limit(3);
+
+  const upcomingEvents = events || [];
 
   return (
     <div>
@@ -178,35 +188,51 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {upcomingEvents.map((event) => (
-              <Link
-                key={event.id}
-                href={`/events/${event.id}`}
-                className="group bg-[#F9F7F2] rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                <div className="relative h-40">
-                  <Image
-                    src={event.image_url}
-                    alt={event.title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute top-3 left-3 bg-[#013220] text-white px-3 py-1 rounded-full text-sm font-medium">
-                    {new Date(event.date).toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'short',
-                    })}
+            {upcomingEvents.length > 0 ? (
+              upcomingEvents.map((event) => (
+                <Link
+                  key={event.id}
+                  href={`/events/${event.id}`}
+                  className="group bg-[#F9F7F2] rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  <div className="relative h-40">
+                    {event.image_url ? (
+                      <Image
+                        src={event.image_url}
+                        alt={event.title}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#013220] flex items-center justify-center">
+                        <Calendar className="h-12 w-12 text-[#C5A059]" />
+                      </div>
+                    )}
+                    <div className="absolute top-3 left-3 bg-[#013220] text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {new Date(event.date).toLocaleDateString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                      })}
+                    </div>
                   </div>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-[#013220] group-hover:text-[#C5A059] transition-colors">
-                    {event.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 mt-1">{event.location}</p>
-                  <p className="text-sm text-[#C5A059] mt-1">{event.time}</p>
-                </div>
-              </Link>
-            ))}
+                  <div className="p-4">
+                    <h3 className="font-semibold text-[#013220] group-hover:text-[#C5A059] transition-colors">
+                      {event.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 mt-1">{event.location}</p>
+                    <p className="text-sm text-[#C5A059] mt-1">{event.time}</p>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div className="col-span-3 text-center py-8 text-gray-500">
+                <Calendar className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                <p>No upcoming events at the moment.</p>
+                <Link href="/events" className="text-[#C5A059] hover:underline mt-2 inline-block">
+                  Check back soon
+                </Link>
+              </div>
+            )}
           </div>
           <div className="mt-8 text-center md:hidden">
             <Link

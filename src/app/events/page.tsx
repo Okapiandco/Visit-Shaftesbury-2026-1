@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Calendar, MapPin, Clock, Plus } from 'lucide-react';
+import { Calendar, MapPin, Clock, Plus, Repeat } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { ShaftesburyEvent } from '@/types';
 
@@ -129,6 +129,12 @@ export default function EventsPage() {
                         {new Date(event.date).toLocaleDateString('en-GB', { month: 'short' })}
                       </div>
                     </div>
+                    {event.recurring && event.recurring !== 'none' && (
+                      <div className="absolute top-4 right-4 bg-[#C5A059] text-[#013220] px-3 py-1 rounded-full text-xs font-semibold flex items-center">
+                        <Repeat className="h-3 w-3 mr-1" />
+                        {event.recurring === 'weekly' ? 'Weekly' : 'Monthly'}
+                      </div>
+                    )}
                   </div>
                   <div className="p-6">
                     <h2 className="text-xl font-semibold text-[#013220] group-hover:text-[#C5A059] transition-colors mb-3">

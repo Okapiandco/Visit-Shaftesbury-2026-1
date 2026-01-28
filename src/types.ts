@@ -1,4 +1,5 @@
 export type EventStatus = 'pending' | 'published';
+export type RecurringType = 'none' | 'weekly' | 'monthly';
 
 export interface ShaftesburyEvent {
   id: string;
@@ -13,6 +14,7 @@ export interface ShaftesburyEvent {
   created_at?: string;
   lat?: number;
   lng?: number;
+  recurring?: RecurringType;
 }
 
 export interface Place {

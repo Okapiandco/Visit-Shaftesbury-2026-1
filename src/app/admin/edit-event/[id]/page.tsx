@@ -3,9 +3,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Calendar, Clock, MapPin, FileText, Link as LinkIcon, ArrowLeft, CheckCircle, AlertCircle, Upload, X, Shield } from 'lucide-react';
+import { Calendar, Clock, MapPin, FileText, Link as LinkIcon, ArrowLeft, CheckCircle, AlertCircle, Upload, X, Shield, Repeat } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { ShaftesburyEvent } from '@/types';
+import { ShaftesburyEvent, RecurringType } from '@/types';
 
 export default function AdminEditEventPage() {
   const router = useRouter();
@@ -31,6 +31,7 @@ export default function AdminEditEventPage() {
     description: '',
     image_url: '',
     website_url: '',
+    recurring: 'none' as RecurringType,
   });
 
   useEffect(() => {
@@ -78,6 +79,7 @@ export default function AdminEditEventPage() {
         description: eventData.description,
         image_url: eventData.image_url || '',
         website_url: eventData.website_url || '',
+        recurring: eventData.recurring || 'none',
       });
       if (eventData.image_url) {
         setImagePreview(eventData.image_url);
@@ -340,7 +342,7 @@ export default function AdminEditEventPage() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="date" className="block text-sm font-medium text-[#013220] mb-2">
-                    Date *
+                    {formData.recurring === 'none' ? 'Date *' : 'Starting Date *'}
                   </label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -372,6 +374,58 @@ export default function AdminEditEventPage() {
                     />
                   </div>
                 </div>
+              </div>
+
+              {/* Recurring Event */}
+              <div>
+                <label className="block text-sm font-medium text-[#013220] mb-2">
+                  <div className="flex items-center">
+                    <Repeat className="h-4 w-4 mr-2 text-gray-500" />
+                    Recurring Event
+                  </div>
+                </label>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, recurring: 'none' }))}
+                    className={`px-4 py-2 rounded-lg border-2 transition-all ${
+                      formData.recurring === 'none'
+                        ? 'border-[#C5A059] bg-[#C5A059]/10 text-[#013220] font-medium'
+                        : 'border-gray-300 text-gray-600 hover:border-gray-400'
+                    }`}
+                  >
+                    One-time event
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, recurring: 'weekly' }))}
+                    className={`px-4 py-2 rounded-lg border-2 transition-all ${
+                      formData.recurring === 'weekly'
+                        ? 'border-[#C5A059] bg-[#C5A059]/10 text-[#013220] font-medium'
+                        : 'border-gray-300 text-gray-600 hover:border-gray-400'
+                    }`}
+                  >
+                    Weekly
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, recurring: 'monthly' }))}
+                    className={`px-4 py-2 rounded-lg border-2 transition-all ${
+                      formData.recurring === 'monthly'
+                        ? 'border-[#C5A059] bg-[#C5A059]/10 text-[#013220] font-medium'
+                        : 'border-gray-300 text-gray-600 hover:border-gray-400'
+                    }`}
+                  >
+                    Monthly
+                  </button>
+                </div>
+                {formData.recurring !== 'none' && (
+                  <p className="mt-2 text-sm text-gray-500">
+                    {formData.recurring === 'weekly'
+                      ? 'This event repeats every week on the same day.'
+                      : 'This event repeats every month on the same date.'}
+                  </p>
+                )}
               </div>
 
               {/* Location */}

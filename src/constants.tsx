@@ -1,4 +1,4 @@
-import { Landmark, DiningPlace, AccommodationPlace, ShaftesburyEvent } from './types';
+import { Landmark, DiningPlace, AccommodationPlace } from './types';
 
 export const COLORS = {
   primary: '#013220', // Forest green
@@ -273,73 +273,5 @@ export const ACCOMMODATION_PLACES: AccommodationPlace[] = [
     website_url: 'https://goldhillglamping.co.uk',
     lat: 51.0050,
     lng: -2.1970,
-  },
-];
-
-export const MOCK_EVENTS: ShaftesburyEvent[] = [
-  {
-    id: '1',
-    title: 'Morning Market at the High Street',
-    date: '2024-06-22',
-    time: '08:30',
-    location: 'High Street',
-    description: 'Weekly market featuring the freshest Dorset produce and local crafts including cheeses, baked goods, and handmade items.',
-    image_url: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&q=80&w=1200',
-    website_url: 'https://www.visit-dorset.com/whats-on/markets/',
-    status: 'published',
-    lat: 51.0055,
-    lng: -2.1982,
-  },
-  {
-    id: '2',
-    title: 'Live Music: The Shreen Quartet',
-    date: '2024-06-25',
-    time: '19:30',
-    location: 'The Mitre Pub',
-    description: 'Classical and folk fusions with traditional Dorset folk tunes re-imagined with modern string quartet sensibility.',
-    image_url: 'https://images.unsplash.com/photo-1511735111819-9a3f7709049c?auto=format&fit=crop&q=80&w=1200',
-    website_url: 'https://shaftesburyartscentre.org.uk/',
-    status: 'published',
-    lat: 51.0041,
-    lng: -2.1992,
-  },
-  {
-    id: '3',
-    title: 'Shaftesbury Abbey Garden Tour',
-    date: '2024-06-28',
-    time: '11:00',
-    location: 'Shaftesbury Abbey',
-    description: 'Explore the historic gardens of the Abbey ruins with an expert guide, discovering medicinal herbs cultivated since the Saxon era.',
-    image_url: 'https://i.postimg.cc/76r8nm5D/PXL_20230928_120620015.jpg',
-    website_url: 'https://shaftesburyabbey.org.uk/',
-    status: 'published',
-    lat: 51.0041,
-    lng: -2.1989,
-  },
-  {
-    id: '4',
-    title: 'Artisan Pottery Workshop',
-    date: '2024-07-02',
-    time: '14:00',
-    location: "The Swan's Yard",
-    description: 'Hands-on clay experience covering wheel-throwing and hand-building techniques.',
-    image_url: 'https://images.unsplash.com/photo-1565191999001-551c187427bb?auto=format&fit=crop&q=80&w=1200',
-    website_url: 'https://www.shaftesbury.gov.uk/',
-    status: 'published',
-    lat: 51.0053,
-    lng: -2.1987,
-  },
-  {
-    id: '5',
-    title: 'Blackmore Vale Sunset Walk',
-    date: '2024-07-05',
-    time: '20:00',
-    location: 'Park Walk Gates',
-    description: 'Guided dusk walk along the promenade to witness the stunning sunset with birdwatching opportunity.',
-    image_url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=1200',
-    website_url: 'https://www.visit-dorset.com/',
-    status: 'published',
-    lat: 51.0035,
-    lng: -2.2010,
   },
 ];
